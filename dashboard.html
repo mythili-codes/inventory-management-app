@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Inventory</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <h2>📦 Inventory</h2>
+      <nav>
+        <a href="dashboard.html" class="active">Dashboard</a>
+      </nav>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div></div>
+        <div class="user-info">
+          <div class="avatar" id="avatar">?</div>
+          <div>
+            <div style="font-weight:600;color:var(--text);" id="user-name">Loading...</div>
+            <div style="font-size:12px;" id="user-email"></div>
+          </div>
+          <button class="btn small secondary" id="logout-btn">Log out</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <h1 id="greeting">Welcome!</h1>
+        <p class="welcome-sub">Here's your inventory overview.</p>
+
+        <div class="stats" id="stats">
+          <div class="stat-card primary">
+            <div class="label">Total Items</div>
+            <div class="value" id="stat-total">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Total Units</div>
+            <div class="value" id="stat-units">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Inventory Value</div>
+            <div class="value" id="stat-value">$0.00</div>
+          </div>
+          <div class="stat-card warn">
+            <div class="label">Low Stock</div>
+            <div class="value" id="stat-low">0</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><h2>Add a new item</h2></div>
+          <div class="panel-body">
+            <form id="add-form" class="add-form">
+              <div class="form-group">
+                <label>SKU</label>
+                <input type="text" id="sku" required placeholder="ABC-123">
+              </div>
+              <div class="form-group">
+                <label>Name</label>
+                <input type="text" id="name" required placeholder="Item name">
+              </div>
+              <div class="form-group">
+                <label>Quantity</label>
+                <input type="number" id="quantity" min="0" value="0" required>
+              </div>
+              <div class="form-group">
+                <label>Reorder at</label>
+                <input type="number" id="reorder" min="0" value="5" required>
+              </div>
+              <div class="form-group">
+                <label>Unit price</label>
+                <input type="number" id="price" min="0" step="0.01" value="0" required>
+              </div>
+              <button class="btn" type="submit">+ Add</button>
+            </form>
+            <div id="form-status" style="margin-top:10px;padding:10px;border-radius:6px;font-size:12px;font-family:monospace;white-space:pre-wrap;display:none;"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Your Items</h2>
+            <span style="font-size:13px;color:var(--muted);" id="item-count"></span>
+          </div>
+          <div id="items-table"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://ktebdpbihqygipwmxqkq.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0ZWJkcGJpaHF5Z2lwd214cWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTU3MzgsImV4cCI6MjA5NjU5MTczOH0.iQdudIBROJhXCOGWgvnjbnzikbmxuCcyF0Rn_uSCAUw';
+
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+    const statusEl = document.getElementById('form-status');
+    function showStatus(msg, isError) {
+      statusEl.style.display = 'block';
+      statusEl.style.background = isError ? '#fee' : '#efe';
+      statusEl.style.color = isError ? '#900' : '#060';
+      statusEl.textContent = msg;
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function fmtMoney(n) { return '$' + Number(n || 0).toFixed(2); }
+
+    async function init() {
+      const { data: { session }, error } = await sb.auth.getSession();
+      if (error || !session) {
+        window.location.href = 'login.html';
+        return;
+      }
+      currentUser = session.user;
+
+      const name = currentUser.user_metadata?.full_name || currentUser.email.split('@')[0];
+      document.getElementById('user-name').textContent = name;
+      document.getElementById('user-email').textContent = currentUser.email;
+      document.getElementById('avatar').textContent = name.charAt(0).toUpperCase();
+      document.getElementById('greeting').textContent = `Welcome back, ${name}!`;
+
+      await loadItems();
+    }
+
+    async function loadItems() {
+      const { data: items, error } = await sb.from('items').select('*').order('created_at', { ascending: false });
+
+      if (error) {
+        showStatus('Load error: ' + error.message, true);
+        return;
+      }
+
+      const totalItems = items.length;
+      const totalUnits = items.reduce((s, i) => s + i.quantity, 0);
+      const totalValue = items.reduce((s, i) => s + (i.quantity * Number(i.unit_price)), 0);
+      const lowStock = items.filter(i => i.quantity <= i.reorder_level).length;
+
+      document.getElementById('stat-total').textContent = totalItems;
+      document.getElementById('stat-units').textContent = totalUnits;
+      document.getElementById('stat-value').textContent = fmtMoney(totalValue);
+      document.getElementById('stat-low').textContent = lowStock;
+      document.getElementById('item-count').textContent = totalItems ? `${totalItems} item${totalItems === 1 ? '' : 's'}` : '';
+
+      const el = document.getElementById('items-table');
+      if (!items.length) {
+        el.innerHTML = '<div class="empty">No items yet. Add your first one above!</div>';
+        return;
+      }
+      el.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>SKU</th><th>Name</th><th>Qty</th><th>Reorder</th>
+              <th>Price</th><th>Status</th><th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${items.map(i => `
+              <tr>
+                <td>${escapeHtml(i.sku)}</td>
+                <td>${escapeHtml(i.name)}</td>
+                <td>${i.quantity}</td>
+                <td>${i.reorder_level}</td>
+                <td>${fmtMoney(i.unit_price)}</td>
+                <td>${i.quantity <= i.reorder_level
+                  ? '<span class="badge low">LOW</span>'
+                  : '<span class="badge ok">OK</span>'}</td>
+                <td><button class="btn small danger" onclick="deleteItem(${i.id})">Delete</button></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    async function deleteItem(id) {
+      if (!confirm('Delete this item?')) return;
+      const { error } = await sb.from('items').delete().eq('id', id);
+      if (error) return showStatus('Delete error: ' + error.message, true);
+      await loadItems();
+    }
+
+    document.getElementById('add-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      statusEl.style.display = 'none';
+
+      const payload = {
+        user_id: currentUser.id,
+        sku: document.getElementById('sku').value.trim(),
+        name: document.getElementById('name').value.trim(),
+        quantity: Number(document.getElementById('quantity').value),
+        reorder_level: Number(document.getElementById('reorder').value),
+        unit_price: Number(document.getElementById('price').value),
+      };
+
+      const { data, error } = await sb.from('items').insert(payload).select();
+      if (error) {
+        showStatus('❌ Insert failed: ' + error.message, true);
+        return;
+      }
+      showStatus('✅ Added: ' + (data?.[0]?.name || 'item'), false);
+
+      e.target.reset();
+      document.getElementById('quantity').value = 0;
+      document.getElementById('reorder').value = 5;
+      document.getElementById('price').value = 0;
+      await loadItems();
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await sb.auth.signOut();
+      window.location.href = 'login.html';
+    });
+
+    init();
+  </script>
+</body>
+</html>

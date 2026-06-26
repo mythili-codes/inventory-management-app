@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Copy SQL Fix</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+    h1 { color: #008060; }
+    pre { background: #f5f5f5; padding: 20px; border-radius: 8px; font-size: 14px; overflow-x: auto; border: 1px solid #ddd; }
+    button { background: #008060; color: white; border: none; padding: 16px 32px; font-size: 16px; border-radius: 8px; cursor: pointer; margin: 10px 0; }
+    button:hover { background: #006040; }
+    .ok { color: #060; font-weight: bold; padding: 12px; background: #efe; border-radius: 8px; display: none; }
+    .step { background: #eef; padding: 16px; border-radius: 8px; margin: 16px 0; }
+  </style>
+</head>
+<body>
+  <h1>Copy SQL Fix to Clipboard</h1>
+
+  <div class="step">
+    <strong>Step 1:</strong> Indha "Copy SQL" button ah click pannu ↓
+  </div>
+
+  <button onclick="copySql()">📋 Copy SQL</button>
+  <div id="ok" class="ok">✅ Copied! Ippo Supabase SQL Editor ku po → Ctrl+V paste pannu → Run click.</div>
+
+  <pre id="sql">GRANT USAGE ON SCHEMA public TO authenticated, anon;
+GRANT ALL ON public.items TO authenticated;
+GRANT ALL ON public.profiles TO authenticated;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO authenticated;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO authenticated;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO authenticated;</pre>
+
+  <div class="step">
+    <strong>Step 2:</strong> Supabase Dashboard la → SQL Editor → New query → <strong>Ctrl+V</strong> paste → <strong>Run</strong> click
+  </div>
+
+  <div class="step">
+    <strong>Step 3:</strong> Apparam Inventory dashboard tab ku po → <strong>Ctrl+R</strong> refresh → item add pannu 🎉
+  </div>
+
+  <script>
+    function copySql() {
+      const sql = document.getElementById('sql').textContent;
+      navigator.clipboard.writeText(sql).then(() => {
+        document.getElementById('ok').style.display = 'block';
+      }).catch(err => {
+        // Fallback: select the text
+        const range = document.createRange();
+        range.selectNode(document.getElementById('sql'));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        document.getElementById('ok').style.display = 'block';
+      });
+    }
+  </script>
+</body>
+</html>

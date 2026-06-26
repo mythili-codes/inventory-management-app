@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading...</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-card text-center">
+      <div class="logo">
+        <div class="logo-icon">📦</div>
+      </div>
+      <h1>Loading...</h1>
+      <p class="subtitle">Checking your session</p>
+      <div id="debug" style="margin-top:20px;padding:12px;background:#fee;color:#900;border-radius:8px;font-size:13px;text-align:left;display:none;white-space:pre-wrap;font-family:monospace;"></div>
+      <div style="margin-top:16px;">
+        <a href="login.html" class="link">→ Go to Login</a> &nbsp;|&nbsp;
+        <a href="signup.html" class="link">Sign up →</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script>
+    function showErr(msg) {
+      const d = document.getElementById('debug');
+      d.style.display = 'block';
+      d.textContent = msg;
+    }
+    (async () => {
+      try {
+        if (!window.supabase) { showErr('Supabase SDK failed to load from CDN. Check internet.'); return; }
+        if (typeof supabase === 'undefined') { showErr('supabase-client.js did not initialise.'); return; }
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) { showErr('Auth error: ' + error.message); return; }
+        window.location.href = session ? 'dashboard.html' : 'login.html';
+      } catch (e) {
+        showErr('Exception: ' + (e.message || e));
+      }
+    })();
+  </script>
+</body>
+</html>

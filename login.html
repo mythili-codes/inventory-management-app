@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log in — Inventory</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="logo">
+        <div class="logo-icon">📦</div>
+      </div>
+      <h1>Welcome back</h1>
+      <p class="subtitle">Sign in to your inventory dashboard</p>
+
+      <div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" autocomplete="email" placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" autocomplete="current-password" placeholder="Your password">
+        </div>
+        <button type="button" class="btn btn-full" id="submit-btn" onclick="doLogin()">Log in</button>
+        <div id="status" style="margin-top:14px;padding:14px;background:#eef;color:#005;border-radius:8px;font-size:13px;font-family:monospace;white-space:pre-wrap;min-height:60px;"></div>
+      </div>
+
+      <p class="text-center mt-3" style="font-size: 13px; color: var(--muted);">
+        Don't have an account? <a href="signup.html" class="link">Sign up</a>
+      </p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://ktebdpbihqygipwmxqkq.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0ZWJkcGJpaHF5Z2lwd214cWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTU3MzgsImV4cCI6MjA5NjU5MTczOH0.iQdudIBROJhXCOGWgvnjbnzikbmxuCcyF0Rn_uSCAUw';
+
+    const statusEl = document.getElementById('status');
+    function log(msg) {
+      statusEl.textContent += msg + '\n';
+      console.log(msg);
+    }
+
+    let sbClient = null;
+    try {
+      if (!window.supabase || !window.supabase.createClient) {
+        log('❌ Supabase SDK not loaded from CDN');
+      } else {
+        sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        log('✅ Client ready. auth=' + (sbClient.auth ? 'OK' : 'MISSING'));
+        log('Click "Log in" to proceed.');
+      }
+    } catch (e) {
+      log('❌ Client init failed: ' + e.message);
+    }
+
+    async function doLogin() {
+      log('--- BUTTON CLICKED ---');
+      if (!sbClient) { log('❌ No client'); return; }
+      if (!sbClient.auth) { log('❌ No auth on client'); return; }
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+
+      const email = document.getElementById('email').value.trim();
+      const pw = document.getElementById('password').value;
+      log('Email: ' + email);
+      log('Pw chars: ' + pw.length);
+
+      try {
+        log('Calling signInWithPassword...');
+        const { data, error } = await sbClient.auth.signInWithPassword({ email, password: pw });
+
+        if (error) {
+          log('❌ ERROR: ' + error.message);
+          btn.disabled = false;
+          btn.textContent = 'Log in';
+          return;
+        }
+
+        log('✅ LOGIN SUCCESS!');
+        log('User: ' + data.user.email);
+        log('Session: ' + (data.session ? 'YES' : 'NO'));
+        log('Redirecting in 2 sec...');
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+      } catch (ex) {
+        log('💥 EXCEPTION: ' + (ex.message || ex));
+        btn.disabled = false;
+        btn.textContent = 'Log in';
+      }
+    }
+  </script>
+</body>
+</html>
