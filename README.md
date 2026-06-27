@@ -1,150 +1,165 @@
-# Supabase Inventory Dashboard
+# 📦 Inventory Management App
 
-A complete login + inventory dashboard built with **Supabase** (Auth + Postgres) and **vanilla HTML/CSS/JavaScript**.
+> A full-stack inventory dashboard with secure authentication, user-isolated data, and live stats — built with **Supabase** + **vanilla JavaScript**.
 
-**No Node.js. No Express. No MySQL.** Open in a browser and it works.
-
-## What you get
-
-- Sign up / log in / log out (Supabase Auth)
-- Personal dashboard for each user
-- Add / view / delete inventory items
-- Live stats: total items, units, value, low-stock alerts
-- Row-Level Security — each user only sees their own data
+**🌐 Live Demo:** [mythili-inventory.netlify.app](https://mythili-inventory.netlify.app)
+**📂 Source:** [github.com/mythili-codes/inventory-management-app](https://github.com/mythili-codes/inventory-management-app)
 
 ---
 
-## Setup (5 minutes)
+## ✨ Features
 
-### Step 1 — Create a Supabase account & project
+- 🔐 **Secure authentication** — sign up, log in, log out (Supabase Auth)
+- 👤 **Personal dashboard** — each user sees only their own inventory
+- ➕ **Full CRUD** — add, view, and delete inventory items
+- 📊 **Live stats** — total items, total units, inventory value, low-stock alerts
+- 🛡️ **Row-Level Security** — enforced at the database layer (Postgres RLS)
+- 🚀 **Zero backend code** — no Node, no Express, no MySQL — just HTML + Supabase
+- 🌍 **Deployed on Netlify** — free hosting, auto-deploys on git push
 
-1. Go to **https://supabase.com** → Sign up (use GitHub)
-2. Click **"New Project"**
-3. Project name: `inventory-app`
-4. Database password: choose a strong one (save it!)
-5. Region: `Mumbai (ap-south-1)`
-6. Click **Create new project** → wait 2 minutes
+---
 
-### Step 2 — Run the SQL setup
+## 🧱 Tech Stack
 
-1. In Supabase dashboard → **SQL Editor** (left sidebar)
-2. Click **"New query"**
-3. Open `setup.sql` from this folder → copy ALL the contents
-4. Paste into the SQL Editor → click **Run**
-5. You should see "Success. No rows returned."
+| Layer | Tech |
+|-------|------|
+| **Frontend** | HTML, CSS, vanilla JavaScript |
+| **Auth** | Supabase Auth (JWT-based) |
+| **Database** | Supabase (PostgreSQL) |
+| **Security** | Row-Level Security (RLS) policies |
+| **Hosting** | Netlify |
+| **Version control** | Git + GitHub |
 
-This creates the `profiles` and `items` tables, sets up Row-Level Security policies, and creates a trigger to auto-create a profile row on signup.
+---
 
-### Step 3 — Get your API credentials
+## 🎯 Try it out
 
-In Supabase dashboard:
+1. Visit the [live demo](https://mythili-inventory.netlify.app)
+2. Click **Sign up** → create a free test account
+3. Add a few inventory items
+4. Log out, log back in — your data persists ✅
 
-1. Click **⚙️ Project Settings** (left sidebar bottom)
-2. Click **API**
-3. Copy these two values:
-   - **Project URL** — like `https://abcdefgh.supabase.co`
-   - **anon / public key** — long string starting with `eyJ...`
+Sign up with a **different email** in another browser tab — you'll see each user gets a private inventory. That's RLS in action.
 
-### Step 4 — Paste them into the project
+---
 
-Open `js/supabase-client.js` and replace the two placeholder lines at the top:
+## 🛠️ Run locally
 
-```javascript
-const SUPABASE_URL = 'https://YOUR-PROJECT-ID.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR-ANON-PUBLIC-KEY-HERE';
-```
-
-with your real values from Step 3.
-
-### Step 5 — Turn off email confirmation (for testing)
-
-So you can log in instantly without confirming an email:
-
-1. Supabase dashboard → **Authentication** → **Providers** → **Email**
-2. Toggle **OFF** "Confirm email"
-3. Click **Save**
-
-(For production, leave this ON.)
-
-### Step 6 — Run the app
-
-You can simply double-click `index.html` to open it in your browser — but for cleanest behavior, use a local web server:
-
-**Option A — Python (already installed on Linux):**
+### 1. Clone
 
 ```bash
-cd /home/mythili/inventory-supabase
+git clone https://github.com/mythili-codes/inventory-management-app.git
+cd inventory-management-app
+```
+
+### 2. Set up Supabase
+
+1. Create a free account at [supabase.com](https://supabase.com)
+2. Create a new project (any region close to you)
+3. Open **SQL Editor** → paste `setup.sql` → Run
+4. Open **SQL Editor** → paste `fix-permissions.sql` → Run
+5. Copy your **Project URL** and **anon public key** from Project Settings → API
+
+### 3. Configure credentials
+
+Open `login.html`, `dashboard.html`, and `signup.html` — replace these two lines with your values:
+
+```javascript
+const SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJ...your-anon-key';
+```
+
+> The anon key is safe to expose — RLS policies protect data at the database level.
+
+### 4. Serve locally
+
+```bash
 python3 -m http.server 8000
 ```
 
-Then open: **http://localhost:8000**
-
-**Option B — Node:**
-
-```bash
-cd /home/mythili/inventory-supabase
-npx serve
-```
-
-**Option C — VS Code:** install the "Live Server" extension and right-click `index.html` → "Open with Live Server".
+Open [http://localhost:8000](http://localhost:8000) 🎉
 
 ---
 
-## How to use
-
-1. Visit **http://localhost:8000** → you'll be sent to login
-2. Click **"Sign up"** → create an account with any email + password (min 6 chars)
-3. You'll land on the dashboard
-4. Add items, see stats update live
-5. Log out → log back in → your data is still there (synced via Supabase)
-
-Sign up with a **different email** in another browser to see that each user gets their own private inventory — Row-Level Security at work.
-
----
-
-## Project structure
+## 📁 Project structure
 
 ```
-inventory-supabase/
-├── index.html              # Entry — redirects to login or dashboard
-├── login.html              # Login page
-├── signup.html             # Sign up page
-├── dashboard.html          # Main inventory dashboard
-├── setup.sql               # Run this once in Supabase SQL Editor
-├── css/styles.css
-├── js/
-│   └── supabase-client.js  # PUT YOUR KEYS HERE
+inventory-management-app/
+├── index.html              # Landing — redirects to dashboard or login
+├── login.html              # Login (inline Supabase client)
+├── signup.html             # Signup
+├── dashboard.html          # Main dashboard — CRUD + stats
+├── setup.sql               # Tables, RLS policies, signup trigger
+├── fix-permissions.sql     # GRANT permissions for `authenticated` role
+├── css/styles.css          # All styles
+├── js/supabase-client.js   # Shared client + helpers
 └── README.md
 ```
 
 ---
 
-## How it works
+## 🔍 How it works
 
-| Old project (Express + MySQL) | This project (Supabase) |
-|---|---|
-| Express routes for `/api/auth/*` | `supabase.auth.signInWithPassword()` |
-| bcrypt password hashing | Handled by Supabase |
-| express-session cookies | Supabase JWT tokens (in localStorage) |
-| MySQL connection pool | PostgreSQL hosted by Supabase |
-| Routes for items CRUD | `supabase.from('items').select()` etc. |
-| Backend auth middleware | Row-Level Security (RLS) in Postgres |
-| Need to install + run a Node server | Open HTML in browser — done |
+### Authentication flow
 
----
+1. User signs up with email + password → Supabase stores hashed password
+2. On login, Supabase returns a JWT → stored in browser localStorage
+3. Every database request carries this JWT → Postgres knows who you are
+4. RLS policies filter every query: `user_id = auth.uid()`
 
-## Troubleshooting
+### Data isolation (RLS)
 
-- **"Invalid API key"** → Double-check `SUPABASE_URL` and `SUPABASE_ANON_KEY` in `js/supabase-client.js`. No extra spaces, no quotes inside the string.
-- **"new row violates row-level security policy"** → You forgot to run `setup.sql`, or you're not signed in.
-- **Login says "Invalid login credentials"** → Email confirmation is probably ON. Go to Auth → Providers → Email and turn off "Confirm email" (for testing only).
-- **"Failed to fetch" / CORS error** → You opened the HTML directly with `file://`. Use a local server (Step 6 Option A).
-- **Nothing happens after signup** → Open browser DevTools → Console tab to see the error.
+```sql
+CREATE POLICY "Users can only see their own items"
+  ON items FOR SELECT
+  USING (user_id = auth.uid());
+```
+
+Even if two users somehow query the same table — Postgres only returns the rows belonging to the logged-in user. No backend logic required.
 
 ---
 
-## Security notes
+## 🚀 Deployment
 
-- The **anon key** in `supabase-client.js` is meant to be public. RLS policies protect your data.
-- Never paste your **service_role** key into frontend code — that one is admin-level.
-- For production: turn email confirmation ON, add rate limiting in Supabase, restrict allowed domains.
+Deployed via Netlify with auto-deploy on `git push`:
+
+1. Push to GitHub
+2. Netlify rebuilds and deploys in ~30 seconds
+3. Live at the Netlify URL
+
+To deploy your own:
+- Connect this repo on [Netlify](https://app.netlify.com)
+- Build command: *(empty)*
+- Publish directory: *(empty)*
+- Deploy 🚀
+
+After deployment, add the Netlify URL to **Supabase → Authentication → URL Configuration** (Site URL + Redirect URLs).
+
+---
+
+## 🛡️ Security notes
+
+- ✅ **anon key** in frontend — safe (designed for browser, RLS-protected)
+- ❌ **service_role key** — never put in frontend (admin-level, bypasses RLS)
+- ✅ **RLS enabled** on every table
+- ✅ **GRANT permissions** explicitly given to `authenticated` role
+- ✅ **HTTPS only** via Netlify
+- ✅ For production: turn ON email confirmation, add rate limiting
+
+---
+
+## 📜 License
+
+[MIT](LICENSE) © 2026 Mythili
+
+---
+
+## 🙌 Acknowledgments
+
+Built as a learning project to understand:
+- JWT authentication
+- Row-Level Security in Postgres
+- Static site deployment workflow
+- Git + GitHub + Netlify CI/CD
+
+If this helped you, give it a ⭐ on GitHub!
