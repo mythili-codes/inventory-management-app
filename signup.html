@@ -324,6 +324,15 @@
       }
 
       if (error) {
+        // Rate limit case — inform user clearly
+        if (/rate limit|too many requests/i.test(error.message)) {
+          showError('Too many signup attempts. Please wait a few minutes and try again, or contact support.');
+          showToast('Rate limit — try again in 5 minutes', true);
+          btn.disabled = false;
+          btn.classList.remove('loading');
+          return;
+        }
+
         // If user already exists — try to sign them in with the provided password
         const isAlreadyExists = /already registered|already exists|already in use|user already/i.test(error.message);
         if (isAlreadyExists) {
