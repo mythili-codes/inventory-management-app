@@ -99,20 +99,36 @@
 
   <div class="toast" id="toast"></div>
 
+  <div id="debug-panel" style="position:fixed;bottom:10px;left:10px;right:10px;max-height:200px;overflow-y:auto;background:#1a1a2e;color:#3ecf8e;padding:12px;border-radius:8px;font-family:monospace;font-size:11px;line-height:1.5;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+    <div style="color:#f59e0b;font-weight:bold;margin-bottom:6px;">🔍 DEBUG PANEL (helps identify issues)</div>
+    <div id="debug-log">Waiting for actions...</div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = 'https://ktebdpbihqygipwmxqkq.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0ZWJkcGJpaHF5Z2lwd214cWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTU3MzgsImV4cCI6MjA5NjU5MTczOH0.iQdudIBROJhXCOGWgvnjbnzikbmxuCcyF0Rn_uSCAUw';
 
+    function dbg(msg, isError) {
+      const el = document.getElementById('debug-log');
+      if (!el) { console.log(msg); return; }
+      const line = document.createElement('div');
+      line.style.color = isError ? '#ef4444' : '#3ecf8e';
+      line.textContent = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+      el.appendChild(line);
+      console.log(msg);
+    }
+
     let supabase;
     try {
-      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      console.log('✅ Supabase client initialized');
+      if (!window.supabase || !window.supabase.createClient) {
+        dbg('❌ Supabase SDK not loaded! Check internet or CDN blocked.', true);
+      } else {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        dbg('✅ Supabase client ready');
+      }
     } catch (e) {
-      console.error('❌ Supabase client init failed:', e);
-      document.addEventListener('DOMContentLoaded', () => {
-        showError('Failed to load. Please refresh and try again.');
-      });
+      dbg('❌ Supabase init error: ' + e.message, true);
     }
 
     (async () => {
@@ -163,9 +179,16 @@
       document.getElementById('error').style.display = 'none';
     }
 
+    document.addEventListener('DOMContentLoaded', () => {
+      dbg('✅ Page ready. Fill form and click Create account.');
+      const form = document.getElementById('signup-form');
+      if (!form) { dbg('❌ Form not found in DOM!', true); return; }
+      dbg('✅ Form event listener attached');
+    });
+
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      console.log('🔵 Signup form submitted');
+      dbg('🔵 Create account button clicked');
 
       const btn = document.getElementById('submit-btn');
       btn.disabled = true;
@@ -177,7 +200,7 @@
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
-      console.log('📝 Sending to Supabase:', { name, email, pwLen: password.length });
+      dbg('📝 Data: name="' + name + '", email="' + email + '", pw length=' + password.length);
 
       if (!name || !email || !password) {
         showError('Please fill in all fields.');
@@ -199,15 +222,28 @@
         return;
       }
 
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: name } },
-      });
+      dbg('⏳ Calling Supabase signUp...');
+      let data, error;
+      try {
+        const res = await supabase.auth.signUp({
+          email,
+          password,
+          options: { data: { full_name: name } },
+        });
+        data = res.data;
+        error = res.error;
+      } catch (ex) {
+        dbg('💥 Network/API error: ' + (ex.message || ex), true);
+        showError('Network error. Please check your connection.');
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        return;
+      }
 
-      console.log('📬 Supabase response:', { data, error });
+      dbg('📬 Response received');
 
       if (error) {
+        dbg('❌ Signup failed: ' + error.message, true);
         showError(error.message);
         showToast(error.message, true);
         btn.disabled = false;
@@ -216,11 +252,13 @@
       }
 
       if (data.session) {
+        dbg('✅ Session created! Redirecting to dashboard in 1.5s...');
         showSuccess('✅ Account created successfully! Redirecting to your dashboard...');
         showToast('✅ Welcome to Inventory!');
         btn.querySelector('.btn-text').textContent = '✓ Success';
         setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
       } else {
+        dbg('✅ Account created but no session. Email confirmation likely ON. Redirecting to login in 3.5s.');
         showSuccess('✅ Account created! Please check your email to confirm, then sign in.');
         showToast('✅ Account created! Check your email.');
         btn.querySelector('.btn-text').textContent = '✓ Check your email';
