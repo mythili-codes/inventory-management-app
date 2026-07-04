@@ -301,6 +301,27 @@
       }
 
       if (error) {
+        // If user already exists — try to sign them in with the provided password
+        const isAlreadyExists = /already registered|already exists|already in use|user already/i.test(error.message);
+        if (isAlreadyExists) {
+          try {
+            const loginRes = await supabase.auth.signInWithPassword({ email, password });
+            if (loginRes.data && loginRes.data.session) {
+              showToast('✅ Welcome back!');
+              btn.querySelector('.btn-text').textContent = '✓ Signed in';
+              setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+              return;
+            }
+            if (loginRes.error) {
+              showError('This email is already registered. If it\'s yours, try signing in — or use "Forgot password" to reset it.');
+              showToast('Email already exists', true);
+              btn.disabled = false;
+              btn.classList.remove('loading');
+              return;
+            }
+          } catch (ex) { /* fall through */ }
+        }
+
         showError(error.message);
         showToast(error.message, true);
         btn.disabled = false;
