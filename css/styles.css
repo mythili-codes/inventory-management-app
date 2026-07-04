@@ -151,6 +151,54 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(62, 207, 142, 0.15);
 }
 
+.password-wrap {
+  position: relative;
+}
+.password-wrap input {
+  padding-right: 44px;
+}
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 18px;
+  color: var(--muted);
+  border-radius: 6px;
+  line-height: 1;
+}
+.password-toggle:hover {
+  background: #f1f5f9;
+  color: var(--text);
+}
+
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: var(--primary);
+  color: white;
+  padding: 14px 28px;
+  border-radius: 100px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(62, 207, 142, 0.4);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  font-size: 14px;
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+.toast.error {
+  background: var(--danger);
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.4);
+}
+
 .btn {
   display: inline-block;
   padding: 11px 20px;

@@ -26,7 +26,10 @@
         </div>
         <div class="form-group">
           <label for="password">Password (min 6 chars)</label>
-          <input type="password" id="password" name="password" autocomplete="new-password" required minlength="6">
+          <div class="password-wrap">
+            <input type="password" id="password" name="password" autocomplete="new-password" required minlength="6">
+            <button type="button" class="password-toggle" id="password-toggle" onclick="togglePassword()" aria-label="Show password">👁️</button>
+          </div>
         </div>
         <button type="submit" class="btn btn-full" id="submit-btn">Create account</button>
         <div class="error" id="error"></div>
@@ -39,10 +42,34 @@
     </div>
   </div>
 
+  <div class="toast" id="toast"></div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-client.js"></script>
   <script>
     redirectIfAuthed();
+
+    function togglePassword() {
+      const pw = document.getElementById('password');
+      const btn = document.getElementById('password-toggle');
+      if (pw.type === 'password') {
+        pw.type = 'text';
+        btn.textContent = '🙈';
+        btn.setAttribute('aria-label', 'Hide password');
+      } else {
+        pw.type = 'password';
+        btn.textContent = '👁️';
+        btn.setAttribute('aria-label', 'Show password');
+      }
+    }
+
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.toggle('error', isError);
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
 
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -65,18 +92,24 @@
       if (error) {
         errEl.textContent = error.message;
         errEl.classList.add('show');
+        showToast(error.message, true);
         btn.disabled = false;
         btn.textContent = 'Create account';
         return;
       }
 
-      // If email confirmation is OFF, user has a session already and we go straight in
+      // Email confirmation OFF → session exists → straight to dashboard
       if (data.session) {
-        window.location.href = 'dashboard.html';
+        showToast('✅ Account created! Redirecting to dashboard...');
+        btn.textContent = '✅ Success!';
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
       } else {
-        okEl.textContent = 'Account created! Check your email to confirm, then log in.';
+        // Email confirmation ON → show clear message + redirect to login
+        okEl.textContent = '✅ Account created! Please check your email to confirm, then log in.';
         okEl.classList.add('show');
-        btn.textContent = 'Done';
+        showToast('✅ Account created! Check your email, then log in.');
+        btn.textContent = '✅ Check your email';
+        setTimeout(() => { window.location.href = 'login.html'; }, 3500);
       }
     });
   </script>

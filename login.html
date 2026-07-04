@@ -22,7 +22,10 @@
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" autocomplete="current-password" placeholder="Your password">
+          <div class="password-wrap">
+            <input type="password" id="password" autocomplete="current-password" placeholder="Your password">
+            <button type="button" class="password-toggle" id="password-toggle" onclick="togglePassword()" aria-label="Show password">👁️</button>
+          </div>
         </div>
         <button type="button" class="btn btn-full" id="submit-btn" onclick="doLogin()">Log in</button>
         <div id="status" style="margin-top:14px;padding:14px;background:#eef;color:#005;border-radius:8px;font-size:13px;font-family:monospace;white-space:pre-wrap;min-height:60px;"></div>
@@ -43,6 +46,20 @@
     function log(msg) {
       statusEl.textContent += msg + '\n';
       console.log(msg);
+    }
+
+    function togglePassword() {
+      const pw = document.getElementById('password');
+      const btn = document.getElementById('password-toggle');
+      if (pw.type === 'password') {
+        pw.type = 'text';
+        btn.textContent = '🙈';
+        btn.setAttribute('aria-label', 'Hide password');
+      } else {
+        pw.type = 'password';
+        btn.textContent = '👁️';
+        btn.setAttribute('aria-label', 'Show password');
+      }
     }
 
     let sbClient = null;
