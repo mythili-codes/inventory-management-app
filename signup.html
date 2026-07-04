@@ -315,7 +315,18 @@
         btn.querySelector('.btn-text').textContent = '✓ Success';
         setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
       } else {
-        // Email confirmation ON — show clear success screen
+        // No session — try auto-login (works if email confirmation is off but signUp didn't return session)
+        try {
+          const loginRes = await supabase.auth.signInWithPassword({ email, password });
+          if (loginRes.data && loginRes.data.session) {
+            showToast('✅ Welcome to Inventory!');
+            btn.querySelector('.btn-text').textContent = '✓ Success';
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+            return;
+          }
+        } catch (ex) { /* fall through to success screen */ }
+
+        // Auto-login failed → email confirmation is truly ON → show success screen
         showToast('✅ Check your email to confirm!');
         showSuccessScreen(email);
       }
