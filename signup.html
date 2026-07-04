@@ -100,9 +100,29 @@
   <div class="toast" id="toast"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js"></script>
   <script>
-    redirectIfAuthed();
+    const SUPABASE_URL = 'https://ktebdpbihqygipwmxqkq.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0ZWJkcGJpaHF5Z2lwd214cWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTU3MzgsImV4cCI6MjA5NjU5MTczOH0.iQdudIBROJhXCOGWgvnjbnzikbmxuCcyF0Rn_uSCAUw';
+
+    let supabase;
+    try {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      console.log('✅ Supabase client initialized');
+    } catch (e) {
+      console.error('❌ Supabase client init failed:', e);
+      document.addEventListener('DOMContentLoaded', () => {
+        showError('Failed to load. Please refresh and try again.');
+      });
+    }
+
+    (async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) window.location.href = 'dashboard.html';
+      } catch (e) {
+        console.warn('Session check failed:', e);
+      }
+    })();
 
     function togglePassword() {
       const pw = document.getElementById('password');
@@ -145,19 +165,47 @@
 
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
       e.preventDefault();
+      console.log('🔵 Signup form submitted');
 
       const btn = document.getElementById('submit-btn');
       btn.disabled = true;
       btn.classList.add('loading');
       document.getElementById('error').style.display = 'none';
+      document.getElementById('success').style.display = 'none';
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      console.log('📝 Sending to Supabase:', { name, email, pwLen: password.length });
+
+      if (!name || !email || !password) {
+        showError('Please fill in all fields.');
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        return;
+      }
+      if (password.length < 6) {
+        showError('Password must be at least 6 characters.');
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        return;
+      }
+
+      if (!supabase) {
+        showError('Connection error. Please refresh and try again.');
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        return;
+      }
 
       const { data, error } = await supabase.auth.signUp({
-        email: document.getElementById('email').value.trim(),
-        password: document.getElementById('password').value,
-        options: {
-          data: { full_name: document.getElementById('name').value.trim() },
-        },
+        email,
+        password,
+        options: { data: { full_name: name } },
       });
+
+      console.log('📬 Supabase response:', { data, error });
 
       if (error) {
         showError(error.message);
