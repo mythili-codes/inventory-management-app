@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="auth-container">
-    <!-- Left panel — brand -->
+    <!-- Brand panel -->
     <div class="auth-brand">
       <div class="brand-content">
         <div class="brand-logo">📦</div>
@@ -24,7 +24,7 @@
       <div class="brand-decor decor-2"></div>
     </div>
 
-    <!-- Right panel — form -->
+    <!-- Form panel -->
     <div class="auth-form-panel">
       <div class="auth-form-inner">
         <div class="form-header">
@@ -45,17 +45,14 @@
           </div>
 
           <div class="input-group">
-            <label for="password">
-              Password
-              <a href="#" class="label-link" onclick="event.preventDefault(); alert('Password reset coming soon!')">Forgot?</a>
-            </label>
+            <label for="password">Password</label>
             <div class="input-wrapper">
               <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
               </svg>
               <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" required>
-              <button type="button" class="pw-toggle" id="pw-toggle" onclick="togglePassword()" aria-label="Show password">
+              <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Show password">
                 <svg id="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                   <circle cx="12" cy="12" r="3"/>
@@ -92,111 +89,105 @@
 
   <script src="js/supabase-sdk.js"></script>
   <script>
+  (function () {
+    'use strict';
+
     const SUPABASE_URL = 'https://ktebdpbihqygipwmxqkq.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0ZWJkcGJpaHF5Z2lwd214cWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTU3MzgsImV4cCI6MjA5NjU5MTczOH0.iQdudIBROJhXCOGWgvnjbnzikbmxuCcyF0Rn_uSCAUw';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0ZWJkcGJpaHF5Z2lwd214cWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTU3MzgsImV4cCI6MjA5NjU5MTczOH0.iQdudIBROJhXCOGWgvnjbnzikbmxuCcyF0Rn_uSCAUw';
 
-    let sbClient = null;
+    let sb = null;
     try {
-      if (window.supabase && window.supabase.createClient) {
-        sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      }
-    } catch (e) {
-      console.error('Supabase init error:', e);
+      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    } catch (err) {
+      console.error('Supabase init failed:', err);
     }
 
-    if (sbClient) {
-      (async () => {
-        try {
-          const { data: { session } } = await sbClient.auth.getSession();
-          if (session) window.location.href = 'dashboard.html';
-        } catch (e) {}
-      })();
-    }
+    const $ = (id) => document.getElementById(id);
+    const form = $('login-form');
+    const submitBtn = $('submit-btn');
+    const errorEl = $('error');
+    const toast = $('toast');
 
-    function togglePassword() {
-      const pw = document.getElementById('password');
-      const eyeOpen = document.getElementById('eye-open');
-      const eyeClosed = document.getElementById('eye-closed');
-      const btn = document.getElementById('pw-toggle');
-
-      if (pw.type === 'password') {
-        pw.type = 'text';
-        eyeOpen.style.display = 'none';
-        eyeClosed.style.display = 'block';
-        btn.setAttribute('aria-label', 'Hide password');
-      } else {
-        pw.type = 'password';
-        eyeOpen.style.display = 'block';
-        eyeClosed.style.display = 'none';
-        btn.setAttribute('aria-label', 'Show password');
-      }
-    }
-
-    function showToast(message, isError = false) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.toggle('error', isError);
+    function showError(msg) { errorEl.textContent = msg; errorEl.style.display = 'block'; }
+    function hideError() { errorEl.style.display = 'none'; }
+    function showToast(msg, isError) {
+      toast.textContent = msg;
+      toast.classList.toggle('error', !!isError);
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
-
-    function showError(message) {
-      const errEl = document.getElementById('error');
-      errEl.textContent = message;
-      errEl.style.display = 'block';
+    function setLoading(loading) {
+      submitBtn.disabled = loading;
+      submitBtn.classList.toggle('loading', loading);
     }
 
-    function hideError() {
-      document.getElementById('error').style.display = 'none';
+    // Password toggle
+    $('pw-toggle').addEventListener('click', () => {
+      const pw = $('password');
+      const isHidden = pw.type === 'password';
+      pw.type = isHidden ? 'text' : 'password';
+      $('eye-open').style.display = isHidden ? 'none' : 'block';
+      $('eye-closed').style.display = isHidden ? 'block' : 'none';
+      $('pw-toggle').setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+    });
+
+    // Redirect if already logged in
+    if (sb) {
+      sb.auth.getSession().then(({ data }) => {
+        if (data && data.session) {
+          window.location.href = 'dashboard.html';
+        }
+      }).catch(() => {});
     }
 
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
+    // Login submit
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       hideError();
 
-      const btn = document.getElementById('submit-btn');
-      btn.disabled = true;
-      btn.classList.add('loading');
+      const email = $('email').value.trim();
+      const password = $('password').value;
 
-      const email = document.getElementById('email').value.trim();
-      const pw = document.getElementById('password').value;
-
-      if (!email || !pw) {
+      if (!email || !password) {
         showError('Please enter both email and password.');
-        btn.disabled = false;
-        btn.classList.remove('loading');
+        return;
+      }
+      if (!sb) {
+        showError('Connection error. Please refresh the page.');
         return;
       }
 
-      if (!sbClient) {
-        showError('Connection blocked. If using Brave or an ad blocker, please disable Shields for this site and refresh.');
-        showToast('Connection error — disable ad blocker', true);
-        btn.disabled = false;
-        btn.classList.remove('loading');
-        return;
-      }
+      setLoading(true);
 
+      let res;
       try {
-        const { data, error } = await sbClient.auth.signInWithPassword({ email, password: pw });
-
-        if (error) {
-          showError(error.message);
-          showToast(error.message, true);
-          btn.disabled = false;
-          btn.classList.remove('loading');
-          return;
-        }
-
-        showToast('✅ Welcome back! Redirecting...');
-        btn.querySelector('.btn-text').textContent = '✓ Success';
-        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
-      } catch (ex) {
-        showError('Something went wrong. Please try again.');
-        showToast('Connection error', true);
-        btn.disabled = false;
-        btn.classList.remove('loading');
+        res = await sb.auth.signInWithPassword({ email, password });
+      } catch (err) {
+        setLoading(false);
+        showError('Network error. Please check your connection.');
+        return;
       }
+
+      const { data, error } = res;
+
+      if (error) {
+        setLoading(false);
+        showError(error.message);
+        showToast(error.message, true);
+        return;
+      }
+
+      if (data && data.session) {
+        showToast('✅ Welcome back!');
+        submitBtn.querySelector('.btn-text').textContent = '✓ Signing you in...';
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+        return;
+      }
+
+      setLoading(false);
+      showError('Sign in failed. Please try again.');
     });
+  })();
   </script>
 </body>
 </html>
