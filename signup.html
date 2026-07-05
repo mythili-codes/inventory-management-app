@@ -199,6 +199,22 @@
           </div>
         </div>
 
+        <!-- REDIRECT STATE (session created, redirecting to dashboard) -->
+        <div id="redirect-state" style="display:none;">
+          <div class="success-screen">
+            <div class="success-icon">
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <h2>Welcome to Inventory!</h2>
+            <p>Your account has been created successfully. Taking you to your dashboard...</p>
+            <div style="margin-top:24px;">
+              <div style="display:inline-block;width:32px;height:32px;border:3px solid #dcfce7;border-top-color:#16a34a;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -264,6 +280,11 @@
       document.getElementById('form-state').style.display = 'none';
       document.getElementById('success-state').style.display = 'block';
       document.getElementById('success-email-display').textContent = '📧 ' + email;
+    }
+
+    function showRedirectScreen() {
+      document.getElementById('form-state').style.display = 'none';
+      document.getElementById('redirect-state').style.display = 'block';
     }
 
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
@@ -355,20 +376,23 @@
         return;
       }
 
+      // Reset form fields immediately on any success
+      document.getElementById('signup-form').reset();
+
       // Success path
       if (data.session) {
         // Email confirmation OFF — session created → straight to dashboard
+        showRedirectScreen();
         showToast('✅ Welcome to Inventory!');
-        btn.querySelector('.btn-text').textContent = '✓ Success';
-        setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
       } else {
         // No session — try auto-login (works if email confirmation is off but signUp didn't return session)
         try {
           const loginRes = await supabase.auth.signInWithPassword({ email, password });
           if (loginRes.data && loginRes.data.session) {
+            showRedirectScreen();
             showToast('✅ Welcome to Inventory!');
-            btn.querySelector('.btn-text').textContent = '✓ Success';
-            setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
             return;
           }
         } catch (ex) { /* fall through to success screen */ }
