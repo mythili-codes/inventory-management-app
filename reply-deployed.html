@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Reply — "Have You Deployed?"</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body {
+      background: linear-gradient(135deg, #3ecf8e 0%, #2563eb 100%);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      max-width: 620px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 6px;
+    }
+    .header h1 { font-size: 26px; margin-bottom: 6px; }
+    .header p { font-size: 14px; opacity: 0.95; }
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+    .card h2 {
+      font-size: 17px;
+      color: #1a1a2e;
+      margin-bottom: 8px;
+    }
+    .card .note {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 14px;
+    }
+    .copy-btn {
+      background: linear-gradient(135deg, #3ecf8e, #2563eb);
+      color: white;
+      border: none;
+      padding: 13px 20px;
+      font-size: 15px;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 12px;
+      transition: transform 0.15s;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+    }
+    .copy-btn:hover { transform: translateY(-1px); }
+    .copy-btn.copied {
+      background: #10b981;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+    }
+    .msg {
+      background: #f5f5f7;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      color: #1a1a2e;
+      border: 1px solid #e0e0e5;
+    }
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: #10b981;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 100px;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+      transition: transform 0.3s;
+      z-index: 100;
+      font-size: 14px;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>💬 LinkedIn Reply</h1>
+      <p>Someone asked "Have you deployed?" — pick a reply, click copy, paste in LinkedIn</p>
+    </div>
+
+    <div class="card">
+      <h2>Option 1 — Detailed (Recommended)</h2>
+      <div class="note">Shows all improvements — impressive for recruiters</div>
+      <button class="copy-btn" onclick="copyReply(1, this)">📋 COPY DETAILED REPLY</button>
+      <div class="msg" id="msg1">Yes, it's live! 🚀
+
+New URL: https://mythili-codes.github.io/inventory-management-app/
+
+Please try the signup flow — it's been completely refactored with:
+✅ Clear "Account created successfully!" message
+✅ 3-second countdown to dashboard
+✅ Password show/hide toggle
+✅ Auto sign-in if email is already registered
+
+If you already registered earlier with an email, please use the LOGIN page instead. Would love your feedback! 🙌</div>
+    </div>
+
+    <div class="card">
+      <h2>Option 2 — Short & punchy</h2>
+      <div class="note">Quick answer, direct to link</div>
+      <button class="copy-btn" onclick="copyReply(2, this)">📋 COPY SHORT REPLY</button>
+      <div class="msg" id="msg2">Yes! Live at https://mythili-codes.github.io/inventory-management-app/ 🚀
+
+Fully working now — please try it in an incognito window for a fresh test. Would love your feedback!</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">✅ Copied!</div>
+
+  <script>
+    function copyReply(num, btn) {
+      const text = document.getElementById('msg' + num).innerText;
+      const toast = document.getElementById('toast');
+
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '✅ COPIED! Now paste in LinkedIn';
+        btn.classList.add('copied');
+        toast.textContent = '✅ Reply copied to clipboard!';
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+        setTimeout(() => {
+          btn.textContent = num === 1 ? '📋 COPY DETAILED REPLY' : '📋 COPY SHORT REPLY';
+          btn.classList.remove('copied');
+        }, 4000);
+      }).catch(() => {
+        const range = document.createRange();
+        range.selectNode(document.getElementById('msg' + num));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        btn.textContent = '✅ COPIED!';
+        btn.classList.add('copied');
+      });
+    }
+  </script>
+</body>
+</html>
