@@ -4,117 +4,246 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard — Inventory</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <meta name="description" content="Manage your inventory items, monitor stock levels, and track value.">
+  <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <h2>📦 Inventory</h2>
-      <nav>
-        <a href="dashboard.html" class="active">Dashboard</a>
-      </nav>
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Primary navigation">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-mark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><line x1="10" y1="12" x2="14" y2="12"/>
+          </svg>
+        </div>
+        <div class="sidebar-brand-text">Inventory</div>
+      </div>
+
+      <div>
+        <div class="sidebar-section-label">Workspace</div>
+        <nav class="sidebar-nav" aria-label="Sections">
+          <a href="dashboard.html" class="active" aria-current="page">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>
+            </svg>
+            Dashboard
+          </a>
+        </nav>
+      </div>
     </aside>
 
-    <div class="main">
+    <!-- Main -->
+    <div class="main-area">
       <header class="topbar">
-        <div></div>
-        <div class="user-info">
-          <div class="avatar" id="avatar">?</div>
-          <div>
-            <div style="font-weight:600;color:var(--text);" id="user-name">Loading...</div>
-            <div style="font-size:12px;" id="user-email"></div>
+        <div class="topbar-title">Dashboard</div>
+        <div class="topbar-user">
+          <div class="user-meta">
+            <div class="user-name" id="user-name">Loading…</div>
+            <div class="user-email" id="user-email"></div>
           </div>
-          <button class="btn small secondary" id="logout-btn">Log out</button>
+          <div class="avatar" id="avatar" aria-hidden="true">•</div>
+          <button class="btn btn-secondary" id="logout-btn" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            <span>Sign out</span>
+          </button>
         </div>
       </header>
 
-      <div class="content">
-        <h1 id="greeting">Welcome!</h1>
-        <p class="welcome-sub">Here's your inventory overview.</p>
+      <main class="content">
+        <header class="page-header">
+          <h1 id="greeting">Welcome back</h1>
+          <p class="page-subtitle">Here's your inventory overview.</p>
+        </header>
 
-        <div class="stats" id="stats">
-          <div class="stat-card primary">
-            <div class="label">Total Items</div>
-            <div class="value" id="stat-total">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">Total Units</div>
-            <div class="value" id="stat-units">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">Inventory Value</div>
-            <div class="value" id="stat-value">$0.00</div>
-          </div>
-          <div class="stat-card warn">
-            <div class="label">Low Stock</div>
-            <div class="value" id="stat-low">0</div>
-          </div>
-        </div>
+        <!-- Stats -->
+        <section class="stats-grid" aria-label="Inventory statistics">
+          <article class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Total items</span>
+              <span class="stat-icon stat-icon-primary" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><line x1="10" y1="12" x2="14" y2="12"/>
+                </svg>
+              </span>
+            </div>
+            <div class="stat-value" id="stat-total">0</div>
+            <div class="stat-hint">Unique SKUs in your inventory</div>
+          </article>
 
-        <div class="panel">
-          <div class="panel-header"><h2>Add a new item</h2></div>
-          <div class="panel-body">
-            <form id="add-form" class="add-form">
-              <div class="form-group">
-                <label>SKU</label>
-                <input type="text" id="sku" required placeholder="ABC-123">
+          <article class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Total units</span>
+              <span class="stat-icon stat-icon-info" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 7l-8 4-8-4"/><path d="M4 7v10l8 4 8-4V7"/><path d="M12 11v10"/>
+                </svg>
+              </span>
+            </div>
+            <div class="stat-value" id="stat-units">0</div>
+            <div class="stat-hint">Combined quantity across all items</div>
+          </article>
+
+          <article class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Inventory value</span>
+              <span class="stat-icon stat-icon-neutral" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+              </span>
+            </div>
+            <div class="stat-value" id="stat-value">$0.00</div>
+            <div class="stat-hint">Quantity × unit price</div>
+          </article>
+
+          <article class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Low stock</span>
+              <span class="stat-icon stat-icon-warning" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+              </span>
+            </div>
+            <div class="stat-value" id="stat-low">0</div>
+            <div class="stat-hint">Items at or below reorder level</div>
+          </article>
+        </section>
+
+        <!-- Add Item Card -->
+        <section class="card" style="margin-bottom: var(--space-6);">
+          <div class="card-header">
+            <div>
+              <h2>Add new item</h2>
+              <p class="text-muted" style="font-size: var(--text-sm); margin-top: 2px;">Fill in the details below to add an item to your inventory.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <form id="add-form" class="add-form-grid" novalidate>
+              <div class="field">
+                <label for="sku" class="field-label">SKU</label>
+                <input class="input" type="text" id="sku" placeholder="ABC-123" required aria-required="true">
               </div>
-              <div class="form-group">
-                <label>Name</label>
-                <input type="text" id="name" required placeholder="Item name">
+              <div class="field">
+                <label for="name" class="field-label">Name</label>
+                <input class="input" type="text" id="name" placeholder="Item name" required aria-required="true">
               </div>
-              <div class="form-group">
-                <label>Quantity</label>
-                <input type="number" id="quantity" min="0" placeholder="0" required>
+              <div class="field">
+                <label for="quantity" class="field-label">Quantity</label>
+                <input class="input" type="number" id="quantity" min="0" value="0" required aria-required="true">
               </div>
-              <div class="form-group">
-                <label>Reorder at</label>
-                <input type="number" id="reorder" min="0" placeholder="Enter a threshold" required>
+              <div class="field">
+                <label for="reorder" class="field-label">
+                  Reorder at
+                  <span class="field-hint">alert threshold</span>
+                </label>
+                <input class="input" type="number" id="reorder" min="0" value="5" required aria-required="true">
               </div>
-              <div class="form-group">
-                <label>Unit price</label>
-                <input type="number" id="price" min="0" step="0.01" placeholder="0.00" required>
+              <div class="field">
+                <label for="price" class="field-label">Unit price</label>
+                <input class="input" type="number" id="price" min="0" step="0.01" value="0" required aria-required="true">
               </div>
-              <button class="btn" type="submit">+ Add</button>
+              <button class="btn btn-primary add-submit" type="submit" id="add-btn">
+                <span class="btn-text">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
+                  Add item
+                </span>
+                <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+                  <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/>
+                </svg>
+              </button>
             </form>
-            <div id="form-status" style="margin-top:10px;padding:10px;border-radius:6px;font-size:12px;font-family:monospace;white-space:pre-wrap;display:none;"></div>
+            <div class="alert" id="form-status" style="display:none; margin-top: var(--space-4);"></div>
           </div>
-        </div>
+        </section>
 
-        <div class="panel">
-          <div class="panel-header">
-            <h2>Your Items</h2>
-            <span style="font-size:13px;color:var(--muted);" id="item-count"></span>
+        <!-- Items Table -->
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <h2>Your items</h2>
+              <p class="text-muted" style="font-size: var(--text-sm); margin-top: 2px;" id="item-count">No items yet.</p>
+            </div>
           </div>
-          <div id="items-table"></div>
-        </div>
-      </div>
+          <div id="items-container">
+            <div class="empty-state" id="empty-state">
+              <div class="empty-state-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><line x1="10" y1="12" x2="14" y2="12"/>
+                </svg>
+              </div>
+              <h3>No items yet</h3>
+              <p>Add your first item using the form above.</p>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
   </div>
 
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
   <script src="js/supabase-sdk.js"></script>
   <script>
+  (function () {
+    'use strict';
+
     const SUPABASE_URL = 'https://ktebdpbihqygipwmxqkq.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0ZWJkcGJpaHF5Z2lwd214cWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTU3MzgsImV4cCI6MjA5NjU5MTczOH0.iQdudIBROJhXCOGWgvnjbnzikbmxuCcyF0Rn_uSCAUw';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0ZWJkcGJpaHF5Z2lwd214cWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTU3MzgsImV4cCI6MjA5NjU5MTczOH0.iQdudIBROJhXCOGWgvnjbnzikbmxuCcyF0Rn_uSCAUw';
 
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let sb;
+    try { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); }
+    catch (err) { console.error('Supabase init:', err); }
 
+    const $ = (id) => document.getElementById(id);
+    const toast = $('toast');
+    const statusEl = $('form-status');
+    const addForm = $('add-form');
+    const addBtn = $('add-btn');
+    const itemsContainer = $('items-container');
+    const emptyState = $('empty-state');
     let currentUser = null;
-    const statusEl = document.getElementById('form-status');
-    function showStatus(msg, isError) {
-      statusEl.style.display = 'block';
-      statusEl.style.background = isError ? '#fee' : '#efe';
-      statusEl.style.color = isError ? '#900' : '#060';
-      statusEl.textContent = msg;
+
+    // ============ Utils ============
+    function escapeHtml(v) {
+      if (v == null) return '';
+      return String(v).replace(/[&<>"']/g, (c) =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
+      );
+    }
+    function fmtMoney(n) {
+      return '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function showStatus(msg, kind) {
+      statusEl.className = 'alert alert-' + (kind || 'info');
+      statusEl.innerHTML = '<span>' + escapeHtml(msg) + '</span>';
+      statusEl.style.display = 'flex';
+    }
+    function hideStatus() { statusEl.style.display = 'none'; }
+    function showToast(msg, kind) {
+      toast.className = 'toast';
+      if (kind) toast.classList.add('toast-' + kind);
+      toast.textContent = msg;
+      requestAnimationFrame(() => toast.classList.add('show'));
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+    function setAddLoading(loading) {
+      addBtn.disabled = loading;
+      addBtn.classList.toggle('loading', loading);
     }
 
-    function escapeHtml(str) {
-      if (str === null || str === undefined) return '';
-      return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    }
-    function fmtMoney(n) { return '$' + Number(n || 0).toFixed(2); }
-
+    // ============ Init ============
     async function init() {
+      if (!sb) {
+        window.location.href = 'login.html';
+        return;
+      }
       const { data: { session }, error } = await sb.auth.getSession();
       if (error || !session) {
         window.location.href = 'login.html';
@@ -123,102 +252,163 @@
       currentUser = session.user;
 
       const name = currentUser.user_metadata?.full_name || currentUser.email.split('@')[0];
-      document.getElementById('user-name').textContent = name;
-      document.getElementById('user-email').textContent = currentUser.email;
-      document.getElementById('avatar').textContent = name.charAt(0).toUpperCase();
-      document.getElementById('greeting').textContent = `Welcome back, ${name}!`;
+      $('user-name').textContent = name;
+      $('user-email').textContent = currentUser.email;
+      $('avatar').textContent = name.charAt(0).toUpperCase();
+      $('greeting').textContent = 'Welcome back, ' + name;
 
       await loadItems();
     }
 
+    // ============ Load items ============
     async function loadItems() {
-      const { data: items, error } = await sb.from('items').select('*').order('created_at', { ascending: false });
+      const { data: items, error } = await sb
+        .from('items')
+        .select('*')
+        .order('created_at', { ascending: false });
 
       if (error) {
-        showStatus('Load error: ' + error.message, true);
+        showStatus('Failed to load items: ' + error.message, 'error');
+        showToast('Load error', 'error');
         return;
       }
 
+      // Stats
       const totalItems = items.length;
-      const totalUnits = items.reduce((s, i) => s + i.quantity, 0);
-      const totalValue = items.reduce((s, i) => s + (i.quantity * Number(i.unit_price)), 0);
-      const lowStock = items.filter(i => i.quantity <= i.reorder_level).length;
+      const totalUnits = items.reduce((s, i) => s + Number(i.quantity || 0), 0);
+      const totalValue = items.reduce((s, i) => s + (Number(i.quantity || 0) * Number(i.unit_price || 0)), 0);
+      const lowStock = items.filter((i) => Number(i.quantity) <= Number(i.reorder_level)).length;
 
-      document.getElementById('stat-total').textContent = totalItems;
-      document.getElementById('stat-units').textContent = totalUnits;
-      document.getElementById('stat-value').textContent = fmtMoney(totalValue);
-      document.getElementById('stat-low').textContent = lowStock;
-      document.getElementById('item-count').textContent = totalItems ? `${totalItems} item${totalItems === 1 ? '' : 's'}` : '';
+      $('stat-total').textContent = totalItems;
+      $('stat-units').textContent = totalUnits.toLocaleString();
+      $('stat-value').textContent = fmtMoney(totalValue);
+      $('stat-low').textContent = lowStock;
+      $('item-count').textContent = totalItems ? (totalItems + ' item' + (totalItems === 1 ? '' : 's')) : 'No items yet.';
 
-      const el = document.getElementById('items-table');
+      // Render
       if (!items.length) {
-        el.innerHTML = '<div class="empty">No items yet. Add your first one above!</div>';
+        itemsContainer.innerHTML = '';
+        itemsContainer.appendChild(emptyState);
         return;
       }
-      el.innerHTML = `
-        <table>
-          <thead>
-            <tr>
-              <th>SKU</th><th>Name</th><th>Qty</th><th>Reorder</th>
-              <th>Price</th><th>Status</th><th></th>
-            </tr>
-          </thead>
-          <tbody>
-            ${items.map(i => `
+
+      const rows = items.map((i) => {
+        const isLow = Number(i.quantity) <= Number(i.reorder_level);
+        return `
+          <tr>
+            <td><span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted);">${escapeHtml(i.sku)}</span></td>
+            <td style="font-weight: 600;">${escapeHtml(i.name)}</td>
+            <td>${Number(i.quantity)}</td>
+            <td>${Number(i.reorder_level)}</td>
+            <td>${fmtMoney(i.unit_price)}</td>
+            <td>
+              ${isLow
+                ? '<span class="badge badge-warning">Low stock</span>'
+                : '<span class="badge badge-success">In stock</span>'}
+            </td>
+            <td style="text-align: right;">
+              <button class="btn btn-ghost action-btn" data-delete="${escapeHtml(i.id)}" aria-label="Delete ${escapeHtml(i.name)}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>
+                </svg>
+                Delete
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      itemsContainer.innerHTML = `
+        <div class="table-wrap" style="border: none; border-radius: 0;">
+          <table class="table">
+            <thead>
               <tr>
-                <td>${escapeHtml(i.sku)}</td>
-                <td>${escapeHtml(i.name)}</td>
-                <td>${i.quantity}</td>
-                <td>${i.reorder_level}</td>
-                <td>${fmtMoney(i.unit_price)}</td>
-                <td>${i.quantity <= i.reorder_level
-                  ? '<span class="badge low">LOW</span>'
-                  : '<span class="badge ok">OK</span>'}</td>
-                <td><button class="btn small danger" onclick="deleteItem(${i.id})">Delete</button></td>
+                <th>SKU</th><th>Name</th><th>Quantity</th><th>Reorder at</th><th>Unit price</th><th>Status</th><th style="text-align: right;">Actions</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
       `;
+
+      // Wire delete buttons
+      itemsContainer.querySelectorAll('[data-delete]').forEach((btn) => {
+        btn.addEventListener('click', () => onDelete(btn.getAttribute('data-delete')));
+      });
     }
 
-    async function deleteItem(id) {
+    // ============ Delete ============
+    async function onDelete(id) {
       if (!confirm('Delete this item?')) return;
       const { error } = await sb.from('items').delete().eq('id', id);
-      if (error) return showStatus('Delete error: ' + error.message, true);
+      if (error) {
+        showToast('Delete failed: ' + error.message, 'error');
+        return;
+      }
+      showToast('Item deleted', 'success');
       await loadItems();
     }
 
-    document.getElementById('add-form').addEventListener('submit', async (e) => {
+    // ============ Add item ============
+    addForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      statusEl.style.display = 'none';
+      hideStatus();
 
-      const payload = {
-        user_id: currentUser.id,
-        sku: document.getElementById('sku').value.trim(),
-        name: document.getElementById('name').value.trim(),
-        quantity: Number(document.getElementById('quantity').value),
-        reorder_level: Number(document.getElementById('reorder').value),
-        unit_price: Number(document.getElementById('price').value),
-      };
+      const sku = $('sku').value.trim();
+      const name = $('name').value.trim();
+      const quantity = Number($('quantity').value);
+      const reorder = Number($('reorder').value);
+      const price = Number($('price').value);
 
-      const { data, error } = await sb.from('items').insert(payload).select();
-      if (error) {
-        showStatus('❌ Insert failed: ' + error.message, true);
+      if (!sku || !name) {
+        showStatus('SKU and Name are required.', 'error');
         return;
       }
-      showStatus('✅ Added: ' + (data?.[0]?.name || 'item'), false);
+      if (Number.isNaN(quantity) || quantity < 0) {
+        showStatus('Quantity must be a non-negative number.', 'error');
+        return;
+      }
+      if (Number.isNaN(reorder) || reorder < 0) {
+        showStatus('Reorder threshold must be a non-negative number.', 'error');
+        return;
+      }
+      if (Number.isNaN(price) || price < 0) {
+        showStatus('Unit price must be a non-negative number.', 'error');
+        return;
+      }
 
-      e.target.reset();
+      setAddLoading(true);
+      const { data, error } = await sb.from('items').insert({
+        user_id: currentUser.id,
+        sku, name, quantity,
+        reorder_level: reorder,
+        unit_price: price
+      }).select();
+      setAddLoading(false);
+
+      if (error) {
+        showStatus('Failed to add item: ' + error.message, 'error');
+        showToast('Failed to add', 'error');
+        return;
+      }
+
+      showToast('Added: ' + (data?.[0]?.name || 'item'), 'success');
+      addForm.reset();
+      // Restore sensible defaults
+      $('quantity').value = 0;
+      $('reorder').value = 5;
+      $('price').value = 0;
       await loadItems();
     });
 
-    document.getElementById('logout-btn').addEventListener('click', async () => {
+    // ============ Logout ============
+    $('logout-btn').addEventListener('click', async () => {
       await sb.auth.signOut();
       window.location.href = 'login.html';
     });
 
     init();
+  })();
   </script>
 </body>
 </html>

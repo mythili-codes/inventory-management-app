@@ -4,74 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign up — Inventory</title>
+  <meta name="description" content="Create your Inventory Management account.">
   <link rel="stylesheet" href="css/auth.css">
-  <style>
-    .state { display: none; }
-    .state.active { display: block; }
-    .success-screen { text-align: center; padding: 20px 0; }
-    .success-icon {
-      width: 72px; height: 72px;
-      background: #dcfce7;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 20px;
-      color: #16a34a;
-    }
-    .success-screen h2 {
-      font-size: 26px; font-weight: 700;
-      color: #0f172a; margin-bottom: 10px;
-      letter-spacing: -0.5px;
-    }
-    .success-screen p {
-      color: #64748b; font-size: 15px;
-      line-height: 1.6; margin-bottom: 20px;
-    }
-    .countdown {
-      display: inline-block;
-      background: #dcfce7; color: #15803d;
-      font-weight: 700; font-size: 15px;
-      padding: 4px 14px; border-radius: 100px;
-    }
-    .spinner {
-      display: inline-block;
-      width: 32px; height: 32px;
-      border: 3px solid #dcfce7;
-      border-top-color: #16a34a;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 20px 0;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .success-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
-    .btn-secondary {
-      display: block; text-align: center;
-      color: var(--primary); background: white;
-      border: 1.5px solid var(--primary);
-      padding: 11px 20px; border-radius: 10px;
-      font-size: 14px; font-weight: 600;
-      text-decoration: none; cursor: pointer;
-      font-family: inherit;
-    }
-    .btn-secondary:hover { background: #f0fdf4; }
-    .info-box {
-      background: #fef3c7; border: 1px solid #fde68a;
-      color: #78350f; padding: 12px 14px;
-      border-radius: 10px; font-size: 13px;
-      margin-top: 16px; text-align: left;
-    }
-    .success-email {
-      background: #f0fdf4; border: 1px solid #bbf7d0;
-      color: #15803d; padding: 10px 14px;
-      border-radius: 8px; font-weight: 600;
-      font-size: 14px; margin-bottom: 20px;
-      word-break: break-all;
-    }
-  </style>
 </head>
 <body>
-  <div class="auth-container">
+  <main class="auth-container">
     <!-- Brand panel -->
-    <div class="auth-brand">
+    <aside class="auth-brand" aria-hidden="true">
       <div class="brand-content">
         <div class="brand-logo">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -81,81 +20,93 @@
           </svg>
         </div>
         <h2>Start managing<br>your inventory today</h2>
-        <p>Join thousands of businesses tracking their stock with confidence.</p>
+        <p>A modern dashboard to track stock, monitor performance, and grow your business — all in one place.</p>
         <ul class="brand-features">
           <li>
-            <span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <span aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
               </svg>
-            </span> Get started in under a minute
+            </span>
+            Get started in under a minute
           </li>
           <li>
-            <span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <span aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"/>
                 <circle cx="12" cy="12" r="6"/>
                 <circle cx="12" cy="12" r="2"/>
               </svg>
-            </span> Free forever, no credit card
+            </span>
+            Free forever · No credit card
           </li>
           <li>
-            <span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <span aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                 <circle cx="9" cy="7" r="4"/>
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
               </svg>
-            </span> Built for growing teams
+            </span>
+            Built for growing teams
           </li>
         </ul>
       </div>
-    </div>
+    </aside>
 
     <!-- Form panel -->
-    <div class="auth-form-panel">
+    <section class="auth-form-panel" aria-labelledby="signup-heading">
       <div class="auth-form-inner">
 
         <!-- STATE: FORM -->
         <div class="state active" id="state-form">
-          <div class="form-header">
-            <h1>Create your account</h1>
+          <header class="form-header">
+            <h1 id="signup-heading">Create your account</h1>
             <p>Get started with your free inventory dashboard</p>
-          </div>
+          </header>
 
           <form id="signup-form" novalidate>
-            <div class="input-group">
-              <label for="name">Full name</label>
-              <div class="input-wrapper">
-                <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
-                </svg>
-                <input type="text" id="name" placeholder="Your full name" autocomplete="name" required>
+            <div class="field">
+              <label for="name" class="field-label">Full name</label>
+              <div class="input-wrap">
+                <span class="input-icon-left" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                </span>
+                <input class="input has-icon-left" type="text" id="name" placeholder="Your full name" autocomplete="name" required aria-required="true">
               </div>
             </div>
 
-            <div class="input-group">
-              <label for="email">Email address</label>
-              <div class="input-wrapper">
-                <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                  <polyline points="22,6 12,13 2,6"/>
-                </svg>
-                <input type="email" id="email" placeholder="you@company.com" autocomplete="email" required>
+            <div class="field">
+              <label for="email" class="field-label">Email address</label>
+              <div class="input-wrap">
+                <span class="input-icon-left" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                </span>
+                <input class="input has-icon-left" type="email" id="email" placeholder="you@company.com" autocomplete="email" required aria-required="true">
               </div>
             </div>
 
-            <div class="input-group">
-              <label for="password">Password <span class="label-hint">(min 6 characters)</span></label>
-              <div class="input-wrapper">
-                <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                </svg>
-                <input type="password" id="password" placeholder="Create a strong password" autocomplete="new-password" required minlength="6">
-                <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Show password">
+            <div class="field">
+              <label for="password" class="field-label">
+                Password
+                <span class="field-hint">min 6 characters</span>
+              </label>
+              <div class="input-wrap">
+                <span class="input-icon-left" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                </span>
+                <input class="input has-icon-left has-icon-right" type="password" id="password" placeholder="Create a strong password" autocomplete="new-password" required minlength="6" aria-required="true">
+                <button type="button" class="input-icon-btn" id="pw-toggle" aria-label="Show password">
                   <svg id="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                     <circle cx="12" cy="12" r="3"/>
@@ -166,18 +117,24 @@
                   </svg>
                 </button>
               </div>
+              <p class="field-help">Use at least 6 characters. Mix letters and numbers for stronger security.</p>
             </div>
 
-            <div class="alert alert-error" id="error" style="display:none;"></div>
-
-            <button type="submit" class="btn-primary" id="submit-btn">
-              <span class="btn-text">Create account</span>
-              <span class="btn-spinner">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
-                  <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/>
+            <div class="alert alert-error" id="error" role="alert" style="display:none;">
+              <span class="alert-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
               </span>
+              <span id="error-text"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full btn-lg" id="submit-btn" style="margin-top: var(--space-2)">
+              <span class="btn-text">Create account</span>
+              <svg class="spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+                <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/>
+              </svg>
             </button>
 
             <p class="form-footer">
@@ -189,19 +146,19 @@
         <!-- STATE: SUCCESS (redirecting to dashboard) -->
         <div class="state" id="state-success">
           <div class="success-screen">
-            <div class="success-icon">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <div class="success-icon" aria-hidden="true">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
             </div>
-            <h2>Account created successfully!</h2>
-            <p>Welcome to Inventory Management. Redirecting to your dashboard in <span class="countdown"><span id="countdown">3</span>s</span></p>
-            <div class="spinner"></div>
+            <h2>Account created successfully</h2>
+            <p>Welcome to Inventory. Redirecting to your dashboard in <span class="countdown-pill"><span id="countdown">3</span>s</span></p>
+            <div class="success-spinner" aria-hidden="true"></div>
             <div class="success-actions">
-              <a href="dashboard.html" class="btn-primary" style="text-decoration:none;">
-                <span class="btn-text">Go to Dashboard now</span>
+              <a href="dashboard.html" class="btn btn-primary btn-lg btn-full">
+                <span class="btn-text">Go to dashboard now</span>
               </a>
-              <a href="login.html" class="btn-secondary">Or sign in instead</a>
+              <a href="login.html" class="btn btn-secondary btn-full">Sign in instead</a>
             </div>
           </div>
         </div>
@@ -209,31 +166,37 @@
         <!-- STATE: EMAIL CONFIRMATION REQUIRED -->
         <div class="state" id="state-confirm">
           <div class="success-screen">
-            <div class="success-icon">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"/>
+            <div class="success-icon" aria-hidden="true">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
               </svg>
             </div>
-            <h2>Check your email</h2>
+            <h2>Verify your email</h2>
             <p>We've sent a confirmation link to your email. Click it to activate your account.</p>
-            <div class="success-email" id="confirm-email"></div>
+            <div class="confirm-email-pill" id="confirm-email"></div>
             <div class="success-actions">
-              <a href="login.html" class="btn-primary" style="text-decoration:none;">
-                <span class="btn-text">Continue to Sign In</span>
+              <a href="login.html" class="btn btn-primary btn-lg btn-full">
+                <span class="btn-text">Continue to sign in</span>
               </a>
-              <a href="https://mail.google.com" target="_blank" class="btn-secondary">📧 Open Gmail</a>
+              <a href="https://mail.google.com" target="_blank" rel="noopener" class="btn btn-secondary btn-full">Open Gmail</a>
             </div>
-            <div class="info-box">
-              💡 <strong>Can't find it?</strong> Check your spam folder.
+            <div class="alert alert-warning" style="margin-top: var(--space-5); text-align: left;">
+              <span class="alert-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+              </span>
+              <span><strong>Can't find it?</strong> Check your spam folder.</span>
             </div>
           </div>
         </div>
 
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="js/supabase-sdk.js"></script>
   <script>
@@ -243,50 +206,43 @@
     const SUPABASE_URL = 'https://ktebdpbihqygipwmxqkq.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0ZWJkcGJpaHF5Z2lwd214cWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTU3MzgsImV4cCI6MjA5NjU5MTczOH0.iQdudIBROJhXCOGWgvnjbnzikbmxuCcyF0Rn_uSCAUw';
 
-    // Create Supabase client (isolated in closure)
     let sb = null;
     try {
       sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    } catch (err) {
-      console.error('Supabase init failed:', err);
-    }
+    } catch (err) { console.error('Supabase init:', err); }
 
-    // ============ DOM refs ============
     const $ = (id) => document.getElementById(id);
     const form = $('signup-form');
     const submitBtn = $('submit-btn');
     const errorEl = $('error');
+    const errorText = $('error-text');
     const toast = $('toast');
+    const nameInput = $('name');
+    const emailInput = $('email');
+    const passwordInput = $('password');
 
-    // ============ Helpers ============
     function setState(name) {
       ['form', 'success', 'confirm'].forEach((s) => {
-        const el = $('state-' + s);
-        if (el) el.classList.toggle('active', s === name);
+        $('state-' + s).classList.toggle('active', s === name);
       });
     }
-
     function showError(msg) {
-      errorEl.textContent = msg;
-      errorEl.style.display = 'block';
+      errorText.textContent = msg;
+      errorEl.style.display = 'flex';
     }
-
-    function hideError() {
-      errorEl.style.display = 'none';
-    }
-
-    function showToast(msg, isError) {
+    function hideError() { errorEl.style.display = 'none'; }
+    function markError(input, on) { input.classList.toggle('input-error', !!on); }
+    function showToast(msg, kind) {
+      toast.className = 'toast';
+      if (kind) toast.classList.add('toast-' + kind);
       toast.textContent = msg;
-      toast.classList.toggle('error', !!isError);
-      toast.classList.add('show');
+      requestAnimationFrame(() => toast.classList.add('show'));
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
-
     function setLoading(loading) {
       submitBtn.disabled = loading;
       submitBtn.classList.toggle('loading', loading);
     }
-
     function startCountdown(target, seconds) {
       const cd = $('countdown');
       let remaining = seconds;
@@ -302,128 +258,116 @@
       }, 1000);
     }
 
-    // ============ Password toggle ============
+    // Password toggle
     $('pw-toggle').addEventListener('click', () => {
-      const pw = $('password');
-      const open = $('eye-open');
-      const closed = $('eye-closed');
-      const isHidden = pw.type === 'password';
-      pw.type = isHidden ? 'text' : 'password';
-      open.style.display = isHidden ? 'none' : 'block';
-      closed.style.display = isHidden ? 'block' : 'none';
+      const isHidden = passwordInput.type === 'password';
+      passwordInput.type = isHidden ? 'text' : 'password';
+      $('eye-open').style.display = isHidden ? 'none' : 'block';
+      $('eye-closed').style.display = isHidden ? 'block' : 'none';
       $('pw-toggle').setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
     });
 
-    // ============ Redirect if already logged in ============
+    // Clear error state on input
+    [nameInput, emailInput, passwordInput].forEach((el) => {
+      el.addEventListener('input', () => {
+        hideError();
+        markError(el, false);
+      });
+    });
+
+    // Redirect if already logged in
     if (sb) {
       sb.auth.getSession().then(({ data }) => {
-        if (data && data.session) {
-          window.location.href = 'dashboard.html';
-        }
+        if (data && data.session) window.location.href = 'dashboard.html';
       }).catch(() => {});
     }
 
-    // ============ Signup submit ============
+    // Submit
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       hideError();
+      [nameInput, emailInput, passwordInput].forEach((el) => markError(el, false));
 
-      const name = $('name').value.trim();
-      const email = $('email').value.trim();
-      const password = $('password').value;
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
 
-      if (!name || !email || !password) {
-        showError('Please fill in all fields.');
-        return;
-      }
-      if (password.length < 6) {
-        showError('Password must be at least 6 characters.');
-        return;
-      }
-      if (!sb) {
-        showError('Connection error. Please refresh the page.');
-        return;
-      }
+      if (!name) { markError(nameInput, true); nameInput.focus(); return showError('Please enter your name.'); }
+      if (!email || !/.+@.+\..+/.test(email)) { markError(emailInput, true); emailInput.focus(); return showError('Please enter a valid email address.'); }
+      if (password.length < 6) { markError(passwordInput, true); passwordInput.focus(); return showError('Password must be at least 6 characters.'); }
+      if (!sb) return showError('Connection error. Please refresh the page.');
 
       setLoading(true);
 
-      let signUpRes;
+      let result;
       try {
-        signUpRes = await sb.auth.signUp({
-          email,
-          password,
-          options: { data: { full_name: name } },
+        result = await sb.auth.signUp({
+          email, password,
+          options: { data: { full_name: name } }
         });
       } catch (err) {
         setLoading(false);
-        showError('Network error. Please check your connection.');
-        return;
+        return showError('Network error. Please check your connection.');
       }
 
-      const { data, error } = signUpRes;
+      const { data, error } = result;
 
-      // Handle errors
       if (error) {
         setLoading(false);
 
-        // Email already exists — attempt login with provided password
         if (/already registered|already exists|user already/i.test(error.message)) {
           try {
             const loginRes = await sb.auth.signInWithPassword({ email, password });
             if (loginRes.data && loginRes.data.session) {
               form.reset();
-              showToast('✅ Welcome back!');
+              showToast('Welcome back', 'success');
               setState('success');
               startCountdown('dashboard.html', 3);
               return;
             }
-            showError("This email is already registered. Try signing in instead, or reset your password.");
-            showToast('Email already exists', true);
+            markError(emailInput, true);
+            showError('This email is already registered. Try signing in instead.');
+            showToast('Email already registered', 'error');
             return;
           } catch (_) {
-            showError("This email is already registered. Try signing in instead.");
+            markError(emailInput, true);
+            showError('This email is already registered. Try signing in instead.');
             return;
           }
         }
-
-        // Rate limit
         if (/rate limit|too many/i.test(error.message)) {
           showError('Too many attempts. Please wait a few minutes and try again.');
-          showToast('Rate limit — try again shortly', true);
+          showToast('Rate limit — try again shortly', 'error');
           return;
         }
-
-        // Generic error
         showError(error.message);
-        showToast(error.message, true);
+        showToast(error.message, 'error');
         return;
       }
 
-      // Success — clear form
       form.reset();
 
-      // Path 1: Session immediately available → dashboard
       if (data && data.session) {
-        showToast('✅ Account created successfully!');
+        showToast('Account created successfully', 'success');
         setState('success');
         startCountdown('dashboard.html', 3);
         return;
       }
 
-      // Path 2: No session — try auto-login (edge case)
+      // No session — try auto-login
       try {
         const loginRes = await sb.auth.signInWithPassword({ email, password });
         if (loginRes.data && loginRes.data.session) {
-          showToast('✅ Account created successfully!');
+          showToast('Account created successfully', 'success');
           setState('success');
           startCountdown('dashboard.html', 3);
           return;
         }
-      } catch (_) { /* fall through */ }
+      } catch (_) {}
 
-      // Path 3: Email confirmation required
-      $('confirm-email').textContent = '📧 ' + email;
-      showToast('✅ Check your email to confirm');
+      // Confirmation required
+      $('confirm-email').textContent = email;
+      showToast('Check your email to confirm', 'success');
       setState('confirm');
     });
   })();
