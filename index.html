@@ -2,44 +2,107 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Loading...</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <title>Inventory</title>
+  <link rel="stylesheet" href="css/auth.css">
+  <style>
+    .center-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f172a;
+      color: white;
+    }
+    .center-card {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .logo-box {
+      width: 60px;
+      height: 60px;
+      background: #10b981;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: white;
+    }
+    .center-card h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .center-card p {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255,255,255,0.15);
+      border-top-color: #10b981;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .links a {
+      color: #10b981;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 0 10px;
+    }
+    .links a:hover { text-decoration: underline; }
+  </style>
 </head>
 <body>
-  <div class="auth-wrap">
-    <div class="auth-card text-center">
-      <div class="logo">
-        <div class="logo-icon">📦</div>
+  <div class="center-wrap">
+    <div class="center-card">
+      <div class="logo-box">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 8v13H3V8"/>
+          <path d="M1 3h22v5H1z"/>
+          <line x1="10" y1="12" x2="14" y2="12"/>
+        </svg>
       </div>
-      <h1>Loading...</h1>
-      <p class="subtitle">Checking your session</p>
-      <div id="debug" style="margin-top:20px;padding:12px;background:#fee;color:#900;border-radius:8px;font-size:13px;text-align:left;display:none;white-space:pre-wrap;font-family:monospace;"></div>
-      <div style="margin-top:16px;">
-        <a href="login.html" class="link">→ Go to Login</a> &nbsp;|&nbsp;
-        <a href="signup.html" class="link">Sign up →</a>
+      <h1>Inventory</h1>
+      <p>Loading your session...</p>
+      <div class="spinner"></div>
+      <div class="links" style="margin-top: 24px;">
+        <a href="login.html">Sign in</a>
+        <a href="signup.html">Create account</a>
       </div>
     </div>
   </div>
 
   <script src="js/supabase-sdk.js"></script>
-  <script src="js/supabase-client.js"></script>
   <script>
-    function showErr(msg) {
-      const d = document.getElementById('debug');
-      d.style.display = 'block';
-      d.textContent = msg;
+  (function () {
+    'use strict';
+    const SUPABASE_URL = 'https://ktebdpbihqygipwmxqkq.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0ZWJkcGJpaHF5Z2lwd214cWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTU3MzgsImV4cCI6MjA5NjU5MTczOH0.iQdudIBROJhXCOGWgvnjbnzikbmxuCcyF0Rn_uSCAUw';
+
+    // Safety timeout — never stay on loading forever
+    const fallback = setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 4000);
+
+    try {
+      const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      sb.auth.getSession().then(({ data }) => {
+        clearTimeout(fallback);
+        window.location.href = (data && data.session) ? 'dashboard.html' : 'login.html';
+      }).catch(() => {
+        clearTimeout(fallback);
+        window.location.href = 'login.html';
+      });
+    } catch (err) {
+      clearTimeout(fallback);
+      window.location.href = 'login.html';
     }
-    (async () => {
-      try {
-        if (!window.supabase) { showErr('Supabase SDK failed to load from CDN. Check internet.'); return; }
-        if (typeof supabase === 'undefined') { showErr('supabase-client.js did not initialise.'); return; }
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) { showErr('Auth error: ' + error.message); return; }
-        window.location.href = session ? 'dashboard.html' : 'login.html';
-      } catch (e) {
-        showErr('Exception: ' + (e.message || e));
-      }
-    })();
+  })();
   </script>
 </body>
 </html>

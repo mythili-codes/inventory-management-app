@@ -65,15 +65,15 @@
               </div>
               <div class="form-group">
                 <label>Quantity</label>
-                <input type="number" id="quantity" min="0" value="0" required>
+                <input type="number" id="quantity" min="0" placeholder="0" required>
               </div>
               <div class="form-group">
                 <label>Reorder at</label>
-                <input type="number" id="reorder" min="0" value="5" required>
+                <input type="number" id="reorder" min="0" placeholder="Enter a threshold" required>
               </div>
               <div class="form-group">
                 <label>Unit price</label>
-                <input type="number" id="price" min="0" step="0.01" value="0" required>
+                <input type="number" id="price" min="0" step="0.01" placeholder="0.00" required>
               </div>
               <button class="btn" type="submit">+ Add</button>
             </form>
@@ -210,9 +210,6 @@
       showStatus('✅ Added: ' + (data?.[0]?.name || 'item'), false);
 
       e.target.reset();
-      document.getElementById('quantity').value = 0;
-      document.getElementById('reorder').value = 5;
-      document.getElementById('price').value = 0;
       await loadItems();
     });
 
