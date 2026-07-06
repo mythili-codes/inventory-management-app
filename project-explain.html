@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explain Your Project — Guide</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <style>
+    body {
+      background: var(--color-slate-900);
+      color: var(--color-text-invert);
+      padding: var(--space-6);
+      min-height: 100vh;
+    }
+    .container { max-width: 780px; margin: 0 auto; }
+    .header {
+      text-align: center;
+      margin-bottom: var(--space-8);
+    }
+    .header h1 {
+      color: var(--color-text-invert);
+      font-size: var(--text-4xl);
+      margin-bottom: var(--space-2);
+    }
+    .header p { color: var(--color-slate-400); font-size: var(--text-md); }
+
+    .section-title {
+      color: var(--color-primary-500);
+      font-size: var(--text-lg);
+      font-weight: 700;
+      margin-top: var(--space-8);
+      margin-bottom: var(--space-3);
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid var(--color-slate-700);
+    }
+
+    .card {
+      background: var(--color-surface);
+      color: var(--color-text);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      margin-bottom: var(--space-4);
+      border: 1px solid var(--color-border);
+    }
+    .card h2 {
+      font-size: var(--text-lg);
+      color: var(--color-text);
+      margin-bottom: var(--space-2);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+    .tag {
+      display: inline-block;
+      background: var(--color-primary-50);
+      color: var(--color-primary-700);
+      padding: 2px 10px;
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs);
+      font-weight: 600;
+    }
+    .use-when {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-4);
+    }
+    .content-body {
+      background: var(--color-slate-50);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      font-size: var(--text-sm);
+      line-height: 1.7;
+      white-space: pre-wrap;
+      color: var(--color-text);
+      margin-bottom: var(--space-4);
+      max-height: 380px;
+      overflow-y: auto;
+    }
+    .copy-btn { width: 100%; justify-content: center; }
+    .copy-btn.copied { background: var(--color-success); }
+
+    .qa-item {
+      background: var(--color-slate-50);
+      border-left: 3px solid var(--color-primary-500);
+      padding: var(--space-4);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-3);
+    }
+    .qa-question {
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: var(--space-2);
+    }
+    .qa-answer {
+      font-size: var(--text-sm);
+      line-height: 1.6;
+      color: var(--color-text-muted);
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📚 Explain Your Project</h1>
+      <p>Ready-to-speak scripts for interviews, recruiters, and networking</p>
+    </div>
+
+    <!-- Section: Elevator pitches -->
+    <div class="section-title">🎤 Elevator Pitches</div>
+
+    <div class="card">
+      <h2>1. 30-Second Pitch <span class="tag">Quick intro</span></h2>
+      <div class="use-when">For "tell me about your project" quick answers</div>
+      <div class="content-body" id="pitch1">I built a full-stack Inventory Management app.
+
+It's a web dashboard where users can sign up, log in, and manage their own inventory — track items, monitor stock levels, and get low-stock alerts.
+
+I built it using vanilla JavaScript on the frontend, Supabase for authentication and PostgreSQL database, with Row-Level Security policies enforcing that each user only sees their own data. It's deployed on GitHub Pages with CI/CD via git.
+
+The live demo is at mythili-codes.github.io/inventory-management-app.</div>
+      <button class="btn btn-primary copy-btn" onclick="copy('pitch1', this)">📋 Copy 30-second pitch</button>
+    </div>
+
+    <div class="card">
+      <h2>2. 2-Minute Pitch <span class="tag">Recommended ⭐</span></h2>
+      <div class="use-when">For interviews, recruiters, network calls</div>
+      <div class="content-body" id="pitch2">I built a full-stack Inventory Management application — a web dashboard where any user can sign up, manage their own inventory items, and track stock in real time.
+
+The problem I wanted to solve was multi-tenant data security: when many users share the same app, how do you make sure User A never sees User B's data? Traditional approaches require writing authorization checks in every backend endpoint, and one missing check can leak data.
+
+Instead of that, I used PostgreSQL Row-Level Security policies at the database layer. Each RLS policy says "return this row only if user_id equals the current authenticated user." This means data isolation is enforced at the database — the frontend can't accidentally leak someone else's data even if I wrote a buggy query.
+
+The tech stack is intentionally simple: HTML, CSS, vanilla JavaScript on the frontend — no framework — and Supabase for authentication and the Postgres database. Auth uses JWT tokens stored in the browser. Deployment is GitHub Pages with automatic deploys on every git push.
+
+Along the way, I built a full design system with color tokens, a typography scale, spacing grid, and reusable components — buttons, inputs, cards, tables, badges, toasts — all with proper accessibility, focus states, and mobile responsiveness.
+
+What I learned most: real user feedback matters more than my own opinion. I shipped early, got feedback from multiple LinkedIn users — Mouna, Jeevith, Ammu, and others — and iterated with each round: password toggle, success feedback, form reset, redesign, black-spot bug fix. Each fix taught me something new.
+
+Live demo: mythili-codes.github.io/inventory-management-app
+Code: github.com/mythili-codes/inventory-management-app</div>
+      <button class="btn btn-primary copy-btn" onclick="copy('pitch2', this)">📋 Copy 2-minute pitch</button>
+    </div>
+
+    <div class="card">
+      <h2>3. Technical Deep Dive <span class="tag">For engineers</span></h2>
+      <div class="use-when">When talking to senior developers, architects, tech interviewers</div>
+      <div class="content-body" id="pitch3">Architecturally, this is a static single-page application talking directly to Supabase — no custom backend.
+
+Frontend: vanilla JS with three main routes — signup, login, and dashboard. State is managed by the Supabase SDK, which handles JWT session persistence in localStorage.
+
+Authentication flow: signup calls auth.signUp, which either returns a session immediately (if email confirmation is off) or requires email verification. On the dashboard, I check for a session on load and redirect to login if none exists.
+
+Data model: a single 'items' table with user_id, sku, name, quantity, reorder_level, unit_price. The critical piece is the RLS policies — I've enabled RLS on the table and written policies for SELECT, INSERT, UPDATE, DELETE that all check user_id = auth.uid(). This means even if the frontend sent a query for someone else's data, Postgres would filter it out at the database level.
+
+Design system: I built this from scratch after user feedback. Design tokens for color, typography, spacing, radius, shadows — all as CSS custom properties. Components are pure HTML+CSS classes: btn, input, card, alert, badge, toast, table. They're consistent across every page.
+
+Accessibility: semantic HTML, ARIA labels on icon buttons, aria-live regions for toasts, focus-visible outlines, WCAG-compliant contrast ratios, keyboard-navigable interfaces.
+
+Deployment pipeline: GitHub Pages with automatic build on push. I actually migrated from Netlify to GitHub Pages mid-project when Netlify's free tier credits ran out — good lesson in choosing hosting infrastructure.
+
+The biggest technical challenge was a real production incident where Brave browser's ad blocker was blocking Supabase's CDN. Users would fill the form, click submit, and nothing would happen — the form would just refresh. I diagnosed it by looking at the network tab, fixed it by self-hosting the Supabase SDK from the same origin as the app.
+
+The whole codebase is ~2000 lines and covers signup, login, dashboard, and design system.</div>
+      <button class="btn btn-primary copy-btn" onclick="copy('pitch3', this)">📋 Copy technical deep dive</button>
+    </div>
+
+    <!-- Section: Common Interview Q&A -->
+    <div class="section-title">💼 Common Interview Questions</div>
+
+    <div class="qa-item">
+      <div class="qa-question">Q: Why did you build this project?</div>
+      <div class="qa-answer">I wanted to learn how real production authentication works — not just tutorials, but actually shipping something. Inventory was a small enough domain to build end-to-end while still teaching me about auth, database security, deployment, and real user feedback.</div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">Q: Why Supabase instead of building your own backend?</div>
+      <div class="qa-answer">Supabase gave me production-grade Postgres, auth, and Row-Level Security out of the box. I wanted to focus on what makes web apps actually secure — RLS policies at the database — not reinventing authentication middleware. It let me learn what a real backend cares about without spending weeks building one.</div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">Q: What's Row-Level Security and why does it matter?</div>
+      <div class="qa-answer">RLS is a Postgres feature where policies at the database level filter rows based on the current user. My policy says "return this item only if user_id equals the authenticated user's id." This means even if my frontend has a bug that queries the wrong data, Postgres will still filter it — data isolation is enforced at the deepest layer. In traditional apps, you'd write this check in every API endpoint; one missing check leaks data. RLS makes it impossible to forget.</div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">Q: What was your hardest bug?</div>
+      <div class="qa-answer">Users reported signup wasn't working in Brave browser — they'd fill the form, click submit, and the page would just refresh with empty fields. It looked random.
+
+The root cause: Brave's ad blocker was silently blocking cdn.jsdelivr.net, so the Supabase SDK never loaded. My JavaScript threw an error before preventDefault ran, so the browser did a native form submit — the page refresh explained the empty form.
+
+Fix: I self-hosted the Supabase SDK from my own domain. Same-origin means no ad blocker can touch it.
+
+Lesson: silent failures are the hardest to debug. If a click "does nothing," the code either didn't run or the browser fell back to default behavior.</div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">Q: What did user feedback teach you?</div>
+      <div class="qa-answer">Ship early, ship rough, listen carefully. My first version had emojis in the UI, AI-looking gradients, missing success messages, no form reset after signup, and a subtle black spot on the login page.
+
+None of that felt wrong to me until real users told me. Mouna caught the missing password toggle. Jeevith flagged the missing success feedback, the default value in Reorder At, and the AI gradient look. Someone else found the black spot bug.
+
+Each piece of feedback made the product measurably better. My taste alone would never have gotten it there.</div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">Q: Why no framework like React?</div>
+      <div class="qa-answer">Two reasons. First, I wanted to understand what frameworks abstract away — direct DOM manipulation, event handling, state — so I'd know when to reach for React vs. when vanilla is enough. Second, this app's complexity didn't justify a build pipeline or virtual DOM. Vanilla JS ships in kilobytes and works instantly. If the app grew to have complex state, forms, or many pages, I'd migrate to React.</div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">Q: How does the auth flow work?</div>
+      <div class="qa-answer">On signup, the Supabase SDK calls auth.signUp which creates a user in Postgres. Because I turned off email confirmation, it returns a JWT session immediately. The SDK stores the JWT in localStorage.
+
+On subsequent visits, the SDK reads the JWT and attaches it to every database query. Postgres validates the JWT, extracts the user_id, and applies RLS policies. If the JWT is missing or expired, the query returns no rows.
+
+The dashboard checks for a session on load. No session, redirect to login. Login calls signInWithPassword which either returns a session or an error. Logout calls signOut which clears the JWT.</div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">Q: What would you improve if you had more time?</div>
+      <div class="qa-answer">A few things:
+1) Password reset flow — currently missing.
+2) Bulk import from CSV — users with existing inventory can't onboard fast.
+3) Categories and tags — right now everything is flat.
+4) Charts and analytics — visualize stock over time.
+5) Export to CSV/PDF — for reporting.
+6) Email notifications when items hit reorder level.
+7) End-to-end tests with Playwright.
+
+I chose to stop at the current scope because shipping a polished, focused MVP taught me more than half-building a bigger one.</div>
+    </div>
+
+    <!-- Section: Tech breakdown -->
+    <div class="section-title">🧱 Tech Stack Breakdown</div>
+
+    <div class="card">
+      <h2>Tech Stack — Speak with Confidence</h2>
+      <div class="content-body" id="techstack">FRONTEND
+• HTML5 — semantic markup (main, aside, section, header)
+• CSS3 — design tokens as custom properties, grid + flexbox layouts, responsive breakpoints
+• Vanilla JavaScript — no framework, IIFE-wrapped modules, async/await
+
+BACKEND (as a service)
+• Supabase Auth — JWT-based authentication with automatic token refresh
+• Supabase PostgREST — auto-generated REST API from Postgres schema
+• PostgreSQL — relational database with Row-Level Security policies
+
+SECURITY
+• Row-Level Security (RLS) — policies enforce user_id = auth.uid() on every row
+• JWT tokens stored in localStorage, sent as Authorization header
+• HTTPS everywhere (GitHub Pages default)
+• No admin keys exposed in frontend (only public anon key)
+
+DESIGN SYSTEM
+• CSS custom properties for design tokens
+• 4px spacing grid
+• 10-step slate + emerald palette
+• Feather-style SVG icons
+• Component classes: btn, input, card, alert, badge, toast, table
+
+DEPLOYMENT
+• GitHub as source of truth
+• GitHub Pages for static hosting
+• Automatic deploy on push to main
+• Custom domain-ready
+
+TOOLING
+• Git for version control
+• GitHub CLI (gh) for API operations
+• Chrome DevTools for debugging</div>
+      <button class="btn btn-primary copy-btn" onclick="copy('techstack', this)">📋 Copy tech stack</button>
+    </div>
+
+    <!-- Section: What you learned -->
+    <div class="section-title">🎓 Key Learnings — For "What Did You Learn?"</div>
+
+    <div class="card">
+      <h2>Learning Story <span class="tag">Use in interviews</span></h2>
+      <div class="content-body" id="learnings">Three big lessons from building this:
+
+1. Real user feedback beats my own taste
+
+I shipped the app, and within days real users on LinkedIn tested it. They caught things I couldn't see: missing password toggle, missing success messages, AI-looking gradients, subtle UI bugs. My taste alone would never have caught them. The lesson: ship early, listen, iterate.
+
+2. Silent failures are the hardest bugs
+
+Users reported "signup doesn't work" — the button clicked but nothing happened. It turned out Brave's ad blocker was silently blocking my CDN-loaded Supabase SDK, so my JavaScript never ran, and the browser fell back to native form submission — which just refreshed the page with empty fields.
+
+Diagnosing this took hours because there was no error message, no red text, nothing in the console visible to the user. The fix — self-hosting the SDK — took 10 minutes once I understood the problem.
+
+Lesson: when something "does nothing," ask what fell back to a default behavior. That's where the silent failure lives.
+
+3. Design systems make apps look real
+
+My first version had emojis in headers, gradient backgrounds, inconsistent spacing. It looked like a tutorial project. After feedback, I rebuilt it with proper design tokens — one place to change color, spacing, typography — and consistent components. The same functionality, but suddenly it looked professional.
+
+Lesson: the difference between "portfolio piece" and "product" is often just consistency at the token level.</div>
+      <button class="btn btn-primary copy-btn" onclick="copy('learnings', this)">📋 Copy learnings</button>
+    </div>
+
+    <!-- Tips -->
+    <div class="card" style="background: var(--color-warning-bg); border-color: #fde68a; margin-top: var(--space-8);">
+      <h2 style="color: #92400e;">💡 Delivery Tips</h2>
+      <ul style="color: #78350f; padding-left: 20px; font-size: var(--text-sm); line-height: 1.8;">
+        <li><strong>Practice out loud</strong> — read the 2-minute pitch 3 times before an interview</li>
+        <li><strong>Have the URL ready</strong> — screen share the live demo</li>
+        <li><strong>Show the code</strong> — open the GitHub repo, walk through signup.html</li>
+        <li><strong>Tell the RLS story</strong> — it's your strongest technical talking point</li>
+        <li><strong>Own the bugs</strong> — the Brave debugging story is impressive; don't hide it</li>
+        <li><strong>End with future work</strong> — recruiters love seeing you know what's next</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    function copy(id, btn) {
+      const text = document.getElementById(id).innerText;
+      const toast = document.getElementById('toast');
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.innerHTML;
+        btn.innerHTML = '✅ Copied! Paste anywhere';
+        btn.classList.add('copied');
+        toast.className = 'toast toast-success';
+        toast.textContent = '✓ Copied to clipboard';
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+        setTimeout(() => { btn.innerHTML = original; btn.classList.remove('copied'); }, 4000);
+      });
+    }
+  </script>
+</body>
+</html>
